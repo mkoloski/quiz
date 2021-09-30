@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		
+		<title>Trivia</title>
+		
+		<style>
+			html {
+    			font-family: sans-serif;
+     		}
+
+      		body {
+        		width: 50%;
+        		max-width: 800px;
+        		min-width: 480px;
+        		margin: 0 auto;
+        		text-align: center;
+        		background-color: white;
+      		}
+      		
+      		h1 {
+      			font-size: 32pt;
+      		}
+      		
+      		input[type=text] {
+      			border: 1px solid black;
+      			padding: 5px;
+      			font-size: 16pt;
+      			color: darkblue;
+      			border-radius: 3px;
+      			text-align: center;
+      			background-color: aliceblue;
+      		}
+      		
+      		input[type=text]:focus {
+      			border: 1px solid white;
+      			outline: 2px solid blue;
+      		}
+
+      		.questionLabel {
+        		font-size: 16pt;
+      		}
+		</style>
+	</head>
+<body>
+
+<h1>TRIVIA TIME</h1>
+
+<p class="questionLabel"></p>
+
+<div class="form">
+  	<input type="text" class="answerField"><br><br>
+  	<input type="submit" value="Submit" class="answerSubmit">
+</div> 
+
+<p class="result"></p>
+
+<script>
+	let Question = class {
+		constructor(question, answer) {
+			this.question = question;
+			this.answer = answer;
+		}
+		
+		checkAnswer(answer) {
+			return this.answer.toLowerCase() === answer.toLowerCase();
+		}
+	}
+	
+	const questionLabel = document.querySelector('.questionLabel');
+	const answerField = document.querySelector('.answerField');
+	const answerSubmit = document.querySelector('.answerSubmit');
+	const result = document.querySelector('.result');
+	
+	const NUMBER_OF_QUESTIONS = 10;
+	
+	let questions;
+	let questionIndex;
+	let currentQuestion;
+	let correct;
+	let total;
+	let gameOver = false;
+	
+	resetGame();
+	
+	function initializeQuestions() {
+		questions = [
+			new Question('Who is the GOAT?', 'LeBron James'),
+			new Question('Who is the WOAT?', 'Tom Brady'),
+			new Question('Who won Super Bowl III?', 'New York Jets')
+		];
+	}
+	
+	function randomizeQuestion() {
+		questionIndex = Math.floor(Math.random() * questions.length);
+		currentQuestion = questions[questionIndex];
+	}
+	
+	function checkAnswer() {
+		let answer = answerField.value;
+		let resultText;
+		
+		if (answer === '') {
+			result.textContent = 'Answer cannot be blank';
+			return;
+		}
+		
+		if (currentQuestion.checkAnswer(answer)) {
+			resultText = 'Correct!';
+			correct++;
+		} else {
+			resultText = `Wrong! Correct Answer: ${currentQuestion.answer}`;
+		}
+		
+		result.textContent = resultText;
+		
+		if (++total >= NUMBER_OF_QUESTIONS) {
+			setGameOver();
+		} else if (questions.length > 1) {
+			questions.splice(questionIndex, 1);
+			randomizeQuestion();
+			questionLabel.textContent = currentQuestion.question;
+		} else {
+			setGameOver();
+		}
+		
+		answerField.value = '';
+	}
+	
+	function setGameOver() {
+		gameOver = true;
+		answerSubmit.value = 'Reset';
+		result.textContent = `Score: ${(correct / total) * 100}%`
+		answerField.disabled = true;
+		answerSubmit.focus();
+	}
+	
+	function resetGame() {
+		gameOver = false;
+		answerSubmit.value = 'Submit';
+		answerField.disabled = false;
+		answerField.focus();
+		
+		initializeQuestions();
+		randomizeQuestion();
+		
+		questionLabel.textContent = currentQuestion.question;
+		result.textContent = ''; 
+		answerField.value = '';
+		correct = 0;
+		total = 0;
+	}
+	
+	function clickEvent() {
+		if (gameOver) {
+			resetGame();
+		} else {
+			checkAnswer();
+		}
+	}
+	
+	answerSubmit.addEventListener('click', clickEvent);
+	
+	answerField.addEventListener('keyup', function(event) {
+		if (event.keyCode == 13) {
+			event.preventDefault();
+			answerSubmit.click();
+		}
+	})
+</script> 
+
+</body>
+</html>
+
+
