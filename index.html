@@ -1,61 +1,59 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
+<head>
+	<meta charset="utf-8">
+	<title> Trivia </title>
+	<style>		html {
+		    			font-family: sans-serif;
+		     		}
 		
-		<title>Trivia</title>
+		      		body {
+		        		width: 50%;
+		        		max-width: 800px;
+		        		min-width: 480px;
+		        		margin: 0 auto;
+		        		text-align: center;
+		        		background-color: white;
+		      		}
+		      		
+		      		h1 {
+		      			font-size: 32pt;
+		      		}
+		      		
+		      		input[type=text] {
+		      			border: 1px solid black;
+		      			padding: 5px;
+		      			font-size: 16pt;
+		      			color: darkblue;
+		      			border-radius: 3px;
+		      			text-align: center;
+		      			background-color: aliceblue;
+		      		}
+		      		
+		      		input[type=text]:focus {
+		      			border: 1px solid white;
+		      			outline: 2px solid blue;
+		      		}
 		
-		<style>
-			html {
-    			font-family: sans-serif;
-     		}
-
-      		body {
-        		width: 50%;
-        		max-width: 800px;
-        		min-width: 480px;
-        		margin: 0 auto;
-        		text-align: center;
-        		background-color: white;
-      		}
-      		
-      		h1 {
-      			font-size: 32pt;
-      		}
-      		
-      		input[type=text] {
-      			border: 1px solid black;
-      			padding: 5px;
-      			font-size: 16pt;
-      			color: darkblue;
-      			border-radius: 3px;
-      			text-align: center;
-      			background-color: aliceblue;
-      		}
-      		
-      		input[type=text]:focus {
-      			border: 1px solid white;
-      			outline: 2px solid blue;
-      		}
-
-      		.questionLabel {
-        		font-size: 16pt;
-      		}
-		</style>
-	</head>
+		      		.questionLabel {
+		        		font-size: 16pt;
+		      		}
+	</style>
+</head>
 <body>
-
-<h1>TRIVIA TIME</h1>
-
-<p class="questionLabel"></p>
-
+<h1>
+	TRIVIA TIME 
+</h1>
+<p class="questionLabel">
+</p>
 <div class="form">
-  	<input type="text" class="answerField"><br><br>
-  	<input type="submit" value="Submit" class="answerSubmit">
-</div> 
-
-<p class="result"></p>
-
+	<input type="text" class="answerField">
+	<br>
+	<br>
+	<input type="submit" value="Submit" class="answerSubmit">
+</div>
+<p class="result">
+</p>
 <script>
 	let Question = class {
 		constructor(question, answer) {
@@ -168,9 +166,6 @@
 			answerSubmit.click();
 		}
 	})
-</script> 
-
+</script>
 </body>
 </html>
-
-
