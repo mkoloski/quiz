@@ -44,8 +44,10 @@
 <h1>
 	TRIVIA TIME 
 </h1>
+
 <p class="questionLabel">
 </p>
+
 <div class="form">
 	<input type="text" class="answerField">
 	<br>
@@ -54,15 +56,20 @@
 </div>
 <p class="result">
 </p>
+
 <script>
 	let Question = class {
 		constructor(question, answer) {
 			this.question = question;
 			this.answer = answer;
+			
+			if (typeof answer === 'string') {
+				this.answer = [this.answer];
+			}
 		}
 		
 		checkAnswer(answer) {
-			return this.answer.toLowerCase() === answer.toLowerCase();
+			return this.answer.some((possibleAnswer) => possibleAnswer.toLowerCase() === answer.toLowerCase());
 		}
 	}
 	
@@ -78,15 +85,17 @@
 	let currentQuestion;
 	let correct;
 	let total;
-	let gameOver = false;
+	let gameOver;
+	let startScreen;
+	let userName;
 	
-	resetGame();
+	loadStartScreen();
 	
 	function initializeQuestions() {
 		questions = [
-			new Question('Who is the GOAT?', 'LeBron James'),
+			new Question('Who is the GOAT?', ['LeBron James', 'LeBron', 'King James']),
 			new Question('Who is the WOAT?', 'Tom Brady'),
-			new Question('Who won Super Bowl III?', 'New York Jets')
+			new Question('Who won Super Bowl III?', ['New York Jets', 'Jets'])
 		];
 	}
 	
@@ -108,7 +117,8 @@
 			resultText = 'Correct!';
 			correct++;
 		} else {
-			resultText = `Wrong! Correct Answer: ${currentQuestion.answer}`;
+			//resultText = `Wrong! Correct Answer: ${currentQuestion.answer[0]}`;
+			resultText = 'Wrong!';
 		}
 		
 		result.textContent = resultText;
@@ -128,31 +138,65 @@
 	
 	function setGameOver() {
 		gameOver = true;
-		answerSubmit.value = 'Reset';
-		result.textContent = `Score: ${(correct / total) * 100}%`
+		
+		questionLabel.textContent = 'Game Over!';
+		answerSubmit.value = 'Try Again';
+		
+		let scoreText = `Score: ${(correct / total) * 100}%`
+		
+		if (correct === total) {
+			scoreText = `Congratulations, ${userName}! Perfect Score!`;
+		}
+		
+		loadScore();
+		
+		result.textContent = scoreText;
 		answerField.disabled = true;
 		answerSubmit.focus();
 	}
 	
-	function resetGame() {
-		gameOver = false;
+	function loadScore() {
+		//TODO
+	}
+	
+	function loadStartScreen() {
+		startScreen = true;
+		
 		answerSubmit.value = 'Submit';
 		answerField.disabled = false;
 		answerField.focus();
+		questionLabel.textContent = 'Enter your name:';
+		result.textContent = ''; 
+		answerField.value = '';
+	}
+	
+	function startGame() {
+		result.textContent = ''; 
+		answerField.value = '';
+		
+		gameOver = false;
+		correct = 0;
+		total = 0;
 		
 		initializeQuestions();
 		randomizeQuestion();
 		
 		questionLabel.textContent = currentQuestion.question;
-		result.textContent = ''; 
-		answerField.value = '';
-		correct = 0;
-		total = 0;
 	}
 	
 	function clickEvent() {
-		if (gameOver) {
-			resetGame();
+		if (startScreen) {
+			if (answerField.value === '') {
+				result.textContent = 'Invalid Name!';
+				return
+			}
+			
+			startScreen = false;
+			userName = answerField.value;
+			
+			startGame();
+		} else if (gameOver) {
+			loadStartScreen();
 		} else {
 			checkAnswer();
 		}
@@ -160,7 +204,7 @@
 	
 	answerSubmit.addEventListener('click', clickEvent);
 	
-	answerField.addEventListener('keyup', function(event) {
+	answerField.addEventListener('keydown', function(event) {
 		if (event.keyCode == 13) {
 			event.preventDefault();
 			answerSubmit.click();
