@@ -69,7 +69,7 @@
 		}
 		
 		checkAnswer(answer) {
-			return this.answer.some((possibleAnswer) => possibleAnswer.toLowerCase() === answer.toLowerCase());
+			return this.answer.some((possibleAnswer) => possibleAnswer.toLowerCase() === answer.trim().toLowerCase());
 		}
 	}
 	
@@ -117,7 +117,6 @@
 			resultText = 'Correct!';
 			correct++;
 		} else {
-			//resultText = `Wrong! Correct Answer: ${currentQuestion.answer[0]}`;
 			resultText = 'Wrong!';
 		}
 		
